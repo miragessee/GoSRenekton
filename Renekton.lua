@@ -3,7 +3,7 @@ if myHero.charName ~= "Renekton" then return end
 -- [ update ]
 do
     
-    local Version = 1
+    local Version = 2
     
     local Files = {
         Lua = {
@@ -293,6 +293,122 @@ local E2Icon = "https://vignette.wikia.nocookie.net/leagueoflegends/images/4/4c/
 local RIcon = "https://vignette.wikia.nocookie.net/leagueoflegends/images/8/8e/Dominus.png"
 local TiamatIcon = "https://vignette.wikia.nocookie.net/leagueoflegends/images/e/e3/Tiamat_item.png"
 local THydraIcon = "https://vignette.wikia.nocookie.net/leagueoflegends/images/2/22/Titanic_Hydra_item.png"
+local IS = {}
+local Spells = {
+    ["Aatrox"] = {"AatroxE"},
+    ["Ahri"] = {"AhriOrbofDeception", "AhriFoxFire", "AhriSeduce", "AhriTumble"},
+    ["Akali"] = {"AkaliMota"},
+    ["Amumu"] = {"BandageToss"},
+    ["Anivia"] = {"FlashFrostSpell", "Frostbite"},
+    ["Annie"] = {"Disintegrate"},
+    ["Ashe"] = {"Volley", "EnchantedCrystalArrow"},
+    ["AurelionSol"] = {"AurelionSolQ"},
+    ["Bard"] = {"BardQ"},
+    ["Blitzcrank"] = {"RocketGrab"},
+    ["Brand"] = {"BrandQ", "BrandR"},
+    ["Braum"] = {"BraumQ", "BraumR"},
+    ["Caitlyn"] = {"CaitlynPiltoverPeacemaker", "CaitlynEntrapment", "CaitlynAceintheHole"},
+    ["Cassiopeia"] = {"CassiopeiaW", "CassiopeiaTwinFang"},
+    ["Corki"] = {"PhosphorusBomb", "MissileBarrageMissile", "MissileBarrageMissile2"},
+    ["Diana"] = {"DianaArc", "DianaOrbs"},
+    ["DrMundo"] = {"InfectedCleaverMissileCast"},
+    ["Draven"] = {"DravenDoubleShot", "DravenRCast"},
+    ["Ekko"] = {"EkkoQ"},
+    ["Elise"] = {"EliseHumanQ", "EliseHumanE"},
+    ["Evelynn"] = {"EvelynnQ"},
+    ["Ezreal"] = {"EzrealMysticShot", "EzrealEssenceFlux", "EzrealArcaneShift", "EzrealTrueshotBarrage"},
+    ["Fiddlesticks"] = {"FiddlesticksDarkWind"},
+    ["Fiora"] = {"FioraW"},
+    ["Fizz"] = {"FizzR"},
+    ["Galio"] = {"GalioQ"},
+    ["Gangplank"] = {"GangplankQ"},
+    ["Gnar"] = {"GnarQMissile", "GnarBigQMissile"},
+    ["Gragas"] = {"GragasQ", "GragasR"},
+    ["Graves"] = {"GravesQLineSpell", "GravesSmokeGrenade", "GravesChargeShot"},
+    ["Hecarim"] = {"HecarimUlt"},
+    ["Heimerdinger"] = {"HeimerdingerQ", "HeimerdingerW", "HeimerdingerE", "HeimerdingerEUlt"},
+    ["Illaoi"] = {"IllaoiE"},
+    ["Irelia"] = {"IreliaR"},
+    ["Ivern"] = {"IvernQ"},
+    ["Janna"] = {"HowlingGale", "SowTheWind"},
+    ["Jayce"] = {"JayceShockBlast", "JayceShockBlastWallMis"},
+    ["Jhin"] = {"JhinQ", "JhinW", "JhinR"},
+    ["Jinx"] = {"JinxW", "JinxE", "JinxR"},
+    ["Kaisa"] = {"KaisaQ", "KaisaW"},
+    ["Kalista"] = {"KalistaMysticShot"},
+    ["Karma"] = {"KarmaQ", "KarmaQMantra"},
+    ["Kassadin"] = {"NullLance"},
+    ["Katarina"] = {"KatarinaQ", "KatarinaR"},
+    ["Kayle"] = {"JudicatorReckoning"},
+    ["Kennen"] = {"KennenShurikenHurlMissile1"},
+    ["Khazix"] = {"KhazixW", "KhazixWLong"},
+    ["Kindred"] = {"KindredQ", "KindredE"},
+    ["Kled"] = {"KledQ", "KledQRider"},
+    ["KogMaw"] = {"KogMawQ", "KogMawVoidOoze"},
+    ["Leblanc"] = {"LeblancQ", "LeblancE", "LeblancRQ", "LeblancRE"},
+    ["Leesin"] = {"BlinkMonkQOne"},
+    ["Leona"] = {"LeonaZenithBlade"},
+    ["Lissandra"] = {"LissandraQMissile", "LissandraEMissile"},
+    ["Lucian"] = {"LucianW", "LucianRMis"},
+    ["Lulu"] = {"LuluQ", "LuluW"},
+    ["Lux"] = {"LuxLightBinding", "LuxPrismaticWave", "LuxLightStrikeKugel"},
+    ["Malphite"] = {"SeismicShard"},
+    ["Maokai"] = {"MaokaiQ", "MaokaiR"},
+    ["MissFortune"] = {"MissFortuneRicochetShot", "MissFortuneBulletTime"},
+    ["Morgana"] = {"DarkBindingMissile"},
+    ["Nami"] = {"NamiQ", "NamiW", "NamiRMissile"},
+    ["Nautilus"] = {"NautilusAnchorDragMissile"},
+    ["Nidalee"] = {"JavelinToss"},
+    ["Nocturne"] = {"NocturneDuskbringer"},
+    ["Nunu"] = {"IceBlast"},
+    ["Olaf"] = {"OlafAxeThrowCast"},
+    ["Orianna"] = {"OrianaIzunaCommand", "OrianaRedactCommand"},
+    ["Ornn"] = {"OrnnQ", "OrnnR", "OrnnRCharge"},
+    ["Pantheon"] = {"PantheonQ"},
+    ["Poppy"] = {"PoppyRSpell"},
+    ["Pyke"] = {"PykeQRange"},
+    ["Quinn"] = {"QuinnQ"},
+    ["Rakan"] = {"RakanQ"},
+    ["Reksai"] = {"RekSaiQBurrowed"},
+    ["Rengar"] = {"RengarE"},
+    ["Riven"] = {"RivenIzunaBlade"},
+    ["Rumble"] = {"RumbleGrenade"},
+    ["Ryze"] = {"RyzeQ", "RyzeE"},
+    ["Sejuani"] = {"SejuaniE", "SejuaniR"},
+    ["Shaco"] = {"TwoShivPoison"},
+    ["Shyvana"] = {"ShyvanaFireball", "ShyvanaFireballDragon2"},
+    ["Sion"] = {"SionE"},
+    ["Sivir"] = {"SivirQ"},
+    ["Skarner"] = {"SkarnerFractureMissile"},
+    ["Sona"] = {"SonaQ", "SonaR"},
+    ["Swain"] = {"SwainE"},
+    ["Syndra"] = {"SyndraR"},
+    ["TahmKench"] = {"TahmKenchQ"},
+    ["Taliyah"] = {"TaliyahQ"},
+    ["Talon"] = {"TalonW", "TalonR"},
+    ["Teemo"] = {"BlindingDart", "TeemoRCast"},
+    ["Thresh"] = {"ThreshQInternal"},
+    ["Tristana"] = {"TristanaE", "TristanaR"},
+    ["TwistedFate"] = {"WildCards"},
+    ["Twitch"] = {"TwitchVenomCask"},
+    ["Urgot"] = {"UrgotQ", "UrgotR"},
+    ["Varus"] = {"VarusQ", "VarusR"},
+    ["Vayne"] = {"VayneCondemn", "VayneCondemnMissile"},
+    ["Veigar"] = {"VeigarBalefulStrike", "VeigarR"},
+    ["VelKoz"] = {"VelKozQ", "VelkozQMissileSplit", "VelKozW", "VelKozE"},
+    ["Viktor"] = {"ViktorPowerTransfer", "ViktorDeathRay"},
+    ["Vladimir"] = {"VladimirE"},
+    ["Xayah"] = {"XayahQ", "XayahE", "XayahR"},
+    ["Xerath"] = {"XerathMageSpear"},
+    ["Yasuo"] = {"YasuoQ3W"},
+    ["Yorick"] = {"YorickE"},
+    ["Zac"] = {"ZacQ"},
+    ["Zed"] = {"ZedQ"},
+    ["Ziggs"] = {"ZiggsQ", "ZiggsW", "ZiggsE"},
+    ["Zilean"] = {"ZileanQ", "ZileanQAttachAudio"},
+    ["Zoe"] = {"ZoeQMissile", "ZoeQRecast", "ZoeE"},
+    ["Zyra"] = {"ZyraE"},
+}
 
 function GetSpellEName()
     return myHero:GetSpellData(_E).name
@@ -359,7 +475,7 @@ function THydraDMG()--3748
     return 200
 end
 
-local Version, Author, LVersion = "v1", "miragessee", "8.18"
+local Version, Author, LVersion = "v2", "miragessee", "8.18"
 
 function Renekton:LoadMenu()
     
@@ -389,6 +505,9 @@ function Renekton:LoadMenu()
     
     self.RenektonMenu:MenuElement({id = "AutoLevel", name = "AutoLevel", type = MENU})
     self.RenektonMenu.AutoLevel:MenuElement({id = "AutoLevel", name = "Only Q->E->W", value = true})
+
+    self.RenektonMenu:MenuElement({id = "Escape", name = "Escape", type = MENU})
+    self.RenektonMenu.Escape:MenuElement({id = "UseE", name = "Use E", value = true})
     
     self.RenektonMenu:MenuElement({id = "Drawings", name = "Drawings", type = MENU})
     self.RenektonMenu.Drawings:MenuElement({id = "DrawQ", name = "Draw Q Range", value = true})
@@ -442,7 +561,12 @@ function Renekton:Tick()
     Item_HK[ITEM_5] = HK_ITEM_5
     Item_HK[ITEM_6] = HK_ITEM_6
     Item_HK[ITEM_7] = HK_ITEM_7
+
+    self:Escape()
     
+    self:Action()
+    self:ProcessSpell(GetEnemyHeroes())
+
     if GetMode() == "Harass" then
         self:Harass()
     end
@@ -541,6 +665,50 @@ function Renekton:ProcessSpell(units)
                 spell = {source = unitPos, startPos = startPos, endPos = endPos, name = unit.activeSpell.name, startTime = Game.Timer()}
                 table.insert(self.Detected, spell)
             end
+        end
+    end
+end
+
+function Renekton:Escape()
+    for i = 1, Game.HeroCount() do
+        local h = Game.Hero(i);
+        if h.isEnemy then
+            if h.activeSpell.valid and h.activeSpell.range > 0 then
+                local t = Spells[h.charName]
+                if t then
+                    for j = 1, #t do
+                        if h.activeSpell.name == t[j] then
+                            if IS[h.networkID] == nil then
+                                IS[h.networkID] = {
+                                    sPos = h.activeSpell.startPos,
+                                    ePos = h.activeSpell.startPos + Vector(h.activeSpell.startPos, h.activeSpell.placementPos):Normalized() * h.activeSpell.range,
+                                    radius = h.activeSpell.width or 100,
+                                    speed = h.activeSpell.speed or 9999,
+                                    startTime = h.activeSpell.startTime
+                                }
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+    for key, v in pairs(IS) do
+        local SpellHit = v.sPos + Vector(v.sPos, v.ePos):Normalized() * GetDistance(myHero.pos, v.sPos)
+        local SpellPosition = v.sPos + Vector(v.sPos, v.ePos):Normalized() * (v.speed * (Game.Timer() - v.startTime) * 3)
+        local dodge = SpellPosition + Vector(v.sPos, v.ePos):Normalized() * (v.speed * 0.1)
+        if GetDistanceSqr(SpellHit, SpellPosition) <= GetDistanceSqr(dodge, SpellPosition) and GetDistance(SpellHit, v.sPos) - v.radius - myHero.boundingRadius <= GetDistance(v.sPos, v.ePos) then
+            if GetDistanceSqr(myHero.pos, SpellHit) < (v.radius + myHero.boundingRadius) ^ 2 then
+                if self.RenektonMenu.Escape.UseE:Value() then
+                    if IsReady(_E) then
+                        local castPos = myHero.pos + Vector(myHero.pos,v.sPos):Normalized() * 100
+						Control.CastSpell(HK_E, castPos * -1)
+                    end
+                end
+            end
+        end
+        if (GetDistanceSqr(SpellPosition, v.sPos) >= GetDistanceSqr(v.sPos, v.ePos)) then
+            IS[key] = nil
         end
     end
 end
