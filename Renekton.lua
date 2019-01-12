@@ -3,7 +3,7 @@ if myHero.charName ~= "Renekton" then return end
 -- [ update ]
 do
     
-    local Version = 2
+    local Version = 3
     
     local Files = {
         Lua = {
@@ -293,6 +293,7 @@ local E2Icon = "https://vignette.wikia.nocookie.net/leagueoflegends/images/4/4c/
 local RIcon = "https://vignette.wikia.nocookie.net/leagueoflegends/images/8/8e/Dominus.png"
 local TiamatIcon = "https://vignette.wikia.nocookie.net/leagueoflegends/images/e/e3/Tiamat_item.png"
 local THydraIcon = "https://vignette.wikia.nocookie.net/leagueoflegends/images/2/22/Titanic_Hydra_item.png"
+local RHydraIcon = "https://vignette.wikia.nocookie.net/leagueoflegends/images/e/e8/Ravenous_Hydra_item.png"
 local IS = {}
 local Spells = {
     ["Aatrox"] = {"AatroxE"},
@@ -475,7 +476,7 @@ function THydraDMG()--3748
     return 200
 end
 
-local Version, Author, LVersion = "v2", "miragessee", "8.18"
+local Version, Author, LVersion = "v3", "miragessee", "9.1"
 
 function Renekton:LoadMenu()
     
@@ -485,23 +486,28 @@ function Renekton:LoadMenu()
     self.RenektonMenu.Harass:MenuElement({id = "UseQ", name = "Use Q", value = true, leftIcon = QIcon})
     self.RenektonMenu.Harass:MenuElement({id = "UseW", name = "Use W", value = true, leftIcon = WIcon})
     self.RenektonMenu.Harass:MenuElement({id = "UseE", name = "Use E", value = true, leftIcon = EIcon})
+    self.RenektonMenu.Harass:MenuElement({id = "UseT", name = "Use Tiamat", value = true, leftIcon = TiamatIcon})
+    self.RenektonMenu.Harass:MenuElement({id = "UseTH", name = "Use Titanic Hydra", value = true, leftIcon = THydraIcon})
+    self.RenektonMenu.Harass:MenuElement({id = "UseRH", name = "Use Ravenous Hydra", value = true, leftIcon = RHydraIcon})
     
     self.RenektonMenu:MenuElement({id = "Combo", name = "Combo", type = MENU})
     self.RenektonMenu.Combo:MenuElement({id = "UseQ", name = "Use Q", value = true, leftIcon = QIcon})
-    self.RenektonMenu.Combo:MenuElement({id = "UseW", name = "Use W", value = false, leftIcon = WIcon})
+    self.RenektonMenu.Combo:MenuElement({id = "UseW", name = "Use W", value = true, leftIcon = WIcon})
     self.RenektonMenu.Combo:MenuElement({id = "UseWM", name = "Use W mana > 50", value = true, leftIcon = WIcon})
     self.RenektonMenu.Combo:MenuElement({id = "UseE", name = "Use E", value = true, leftIcon = EIcon})
     self.RenektonMenu.Combo:MenuElement({id = "UseR", name = "Use R", value = true, leftIcon = RIcon})
     self.RenektonMenu.Combo:MenuElement({id = "UseT", name = "Use Tiamat", value = true, leftIcon = TiamatIcon})
     self.RenektonMenu.Combo:MenuElement({id = "UseTH", name = "Use Titanic Hydra", value = true, leftIcon = THydraIcon})
+    self.RenektonMenu.Combo:MenuElement({id = "UseRH", name = "Use Ravenous Hydra", value = true, leftIcon = RHydraIcon})
     
     self.RenektonMenu:MenuElement({id = "KillSteal", name = "KillSteal", type = MENU})
     self.RenektonMenu.KillSteal:MenuElement({id = "UseIgnite", name = "Use Ignite", value = true, leftIcon = IgniteIcon})
-    self.RenektonMenu.KillSteal:MenuElement({id = "UseQ", name = "Use Q", value = true, leftIcon = EIcon})
-    self.RenektonMenu.KillSteal:MenuElement({id = "UseW", name = "Use W", value = true, leftIcon = EIcon})
+    self.RenektonMenu.KillSteal:MenuElement({id = "UseQ", name = "Use Q", value = true, leftIcon = QIcon})
+    self.RenektonMenu.KillSteal:MenuElement({id = "UseW", name = "Use W", value = true, leftIcon = WIcon})
     self.RenektonMenu.KillSteal:MenuElement({id = "UseE", name = "Use E", value = true, leftIcon = EIcon})
     self.RenektonMenu.KillSteal:MenuElement({id = "UseT", name = "Use Tiamat", value = true, leftIcon = TiamatIcon})
     self.RenektonMenu.KillSteal:MenuElement({id = "UseTH", name = "Use Titanic Hydra", value = true, leftIcon = THydraIcon})
+    self.RenektonMenu.KillSteal:MenuElement({id = "UseRH", name = "Use Ravenous Hydra", value = true, leftIcon = RHydraIcon})
     
     self.RenektonMenu:MenuElement({id = "AutoLevel", name = "AutoLevel", type = MENU})
     self.RenektonMenu.AutoLevel:MenuElement({id = "AutoLevel", name = "Only Q->E->W", value = true})
@@ -524,7 +530,7 @@ end
 
 function Renekton:LoadSpells()
     RenektonQ = {range = 325, speed = math.huge, delay = 0.25, radius = 325}
-    RenektonW = {range = 125}
+    RenektonW = {range = 300}
     RenektonE = {range = 450, delay = 0.33, speed = 1125, radius = 45}
     RenektonR = {range = 175}
 
@@ -717,7 +723,7 @@ function Renekton:KillSteal()
     if self.RenektonMenu.KillSteal.UseIgnite:Value() then
         for i, enemy in pairs(GetEnemyHeroes()) do
             local IgniteDmg = (55 + 25 * myHero.levelData.lvl)
-            if ValidTarget(enemy, 600) and enemy.health + enemy.shieldAD < IgniteDmg then
+            if ValidTarget(enemy, 600) and enemy.health + enemy.hpRegen < IgniteDmg then
                 if myHero:GetSpellData(SUMMONER_1).name == "SummonerDot" and IsReady(SUMMONER_1) then
                     Control.CastSpell(HK_SUMMONER_1, enemy)
                 elseif myHero:GetSpellData(SUMMONER_2).name == "SummonerDot" and IsReady(SUMMONER_2) then
@@ -743,6 +749,17 @@ function Renekton:KillSteal()
                 if ValidTarget(enemy, 380) and enemy.health + enemy.shieldAD < THydraDMG() then
                     if myHero:GetSpellData(GetItemSlot(myHero, 3748)).currentCd == 0 then
                         Control.CastSpell(Item_HK[GetItemSlot(myHero, 3748)], enemy)
+                    end
+                end
+            end
+        end
+    end
+    if self.RenektonMenu.KillSteal.UseRH:Value() then
+        if GetItemSlot(myHero, 3074) > 0 then
+            for i, enemy in pairs(GetEnemyHeroes()) do
+                if ValidTarget(enemy, 380) and enemy.health + enemy.shieldAD < TiamatDMG() then
+                    if myHero:GetSpellData(GetItemSlot(myHero, 3074)).currentCd == 0 then
+                        Control.CastSpell(Item_HK[GetItemSlot(myHero, 3074)], enemy)
                     end
                 end
             end
@@ -811,7 +828,39 @@ function Renekton:Draw()
 end
 
 function Renekton:Harass()
+
+    --print(GetSpellEName())
     
+    local targetTiamat = GOS:GetTarget(380, "AP")
+    
+    if self.RenektonMenu.Harass.UseT:Value() then
+        if GetItemSlot(myHero, 3077) > 0 and ValidTarget(targetTiamat, 380) then
+            if myHero:GetSpellData(GetItemSlot(myHero, 3077)).currentCd == 0 then
+                Control.CastSpell(Item_HK[GetItemSlot(myHero, 3077)], targetTiamat)
+            end
+        end
+    end
+    
+    local targetTHydra = GOS:GetTarget(380, "AP")
+    
+    if self.RenektonMenu.Harass.UseTH:Value() then
+        if GetItemSlot(myHero, 3748) > 0 and ValidTarget(targetTHydra, 380) then
+            if myHero:GetSpellData(GetItemSlot(myHero, 3748)).currentCd == 0 then
+                Control.CastSpell(Item_HK[GetItemSlot(myHero, 3748)], targetTHydra)
+            end
+        end
+    end
+
+    local targetRHydra = GOS:GetTarget(380, "AD")
+    
+    if self.RenektonMenu.Harass.UseRH:Value() then
+        if GetItemSlot(myHero, 3074) > 0 and ValidTarget(targetRHydra, 380) then
+            if myHero:GetSpellData(GetItemSlot(myHero, 3074)).currentCd == 0 then
+                Control.CastSpell(Item_HK[GetItemSlot(myHero, 3074)], targetRHydra)
+            end
+        end
+    end
+
     --print(GetSpellEName())-- RenektonSliceAndDice RenektonDice
     if self.RenektonMenu.Harass.UseQ:Value() and self.RenektonMenu.Harass.UseE:Value() and IsReady(_Q) and IsReady(_E) then
         
@@ -933,6 +982,16 @@ function Renekton:Combo()
         if GetItemSlot(myHero, 3748) > 0 and ValidTarget(targetTHydra, 380) then
             if myHero:GetSpellData(GetItemSlot(myHero, 3748)).currentCd == 0 then
                 Control.CastSpell(Item_HK[GetItemSlot(myHero, 3748)], targetTHydra)
+            end
+        end
+    end
+
+    local targetRHydra = GOS:GetTarget(380, "AD")
+    
+    if self.RenektonMenu.Combo.UseRH:Value() then
+        if GetItemSlot(myHero, 3074) > 0 and ValidTarget(targetRHydra, 380) then
+            if myHero:GetSpellData(GetItemSlot(myHero, 3074)).currentCd == 0 then
+                Control.CastSpell(Item_HK[GetItemSlot(myHero, 3074)], targetRHydra)
             end
         end
     end
